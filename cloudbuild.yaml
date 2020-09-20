@@ -1,13 +1,13 @@
 steps:
-  - name: node
+  - name: "gcr.io/cloud-builders/yarn"
     entrypoint: yarn
-    args: ["install"]
+    args: ["yarn"]
   # - name: node
   #   entrypoint: yarn
   #   args: ["test"]
   - name: node
     entrypoint: yarn
-    args: ["run"]
+    args: ["start"]
   - name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy"]
 timeout: "1600s"
