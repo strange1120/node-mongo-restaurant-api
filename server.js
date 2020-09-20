@@ -32,3 +32,5 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }).then(
     const restaurantCollection = db.collection("Restaurant-Data");
   }
 );
+
+// testing syncing
