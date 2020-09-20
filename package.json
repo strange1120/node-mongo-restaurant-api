@@ -5,6 +5,9 @@
   "repository": "https://github.com/strange1120/node-mongo-restaurant-api.git",
   "author": "Sarah Strange <strange1120@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "scripts": {
     "start": "nodemon server.js"
   },
