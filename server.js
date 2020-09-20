@@ -29,6 +29,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   }
 // );
 
+app.get("/", (req, res) => {
+  const name = "World";
+  res.send(`Hello ${name}!`);
+});
+
 app.listen(8080, () => {
   console.log("listening on 3000");
 });
