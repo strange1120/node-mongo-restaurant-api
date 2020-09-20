@@ -13,8 +13,8 @@ steps:
   - name: "node"
     entrypoint: "yarn"
     args: ["install"]
-    - name: node
-    entrypoint: yarn
+  - name: "node"
+    entrypoint: "yarn"
     args: ["start"]
-    - name: "gcr.io/cloud-builders/gcloud"
+  - name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy"]
