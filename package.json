@@ -1,7 +1,7 @@
 {
   "name": "restaurant-api",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "index.js",
   "repository": "https://github.com/strange1120/node-mongo-restaurant-api.git",
   "author": "Sarah Strange <strange1120@gmail.com>",
   "license": "MIT",
@@ -9,7 +9,8 @@
     "node": ">=8.0.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js",
+    "server": "nodemon index.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
