@@ -39,3 +39,4 @@ app.listen(8080, () => {
 });
 
 // testing syncing
+module.exports = app;
