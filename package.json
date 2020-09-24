@@ -9,13 +9,18 @@
     "node": ">=8.0.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "server": "nodemon index.js"
+    "start": "nodemon index.js",
+    "server": "nodemon index.js",
+    "client": "yarn --cwd ./client run start",
+    "dev": "concurrently -k \"yarn run server\" \"yarn run client\""
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "concurrently": "^4.1.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongodb": "^3.6.2"
+    "mongodb": "^3.6.2",
+    "mongoose": "^5.8.10"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
