@@ -1,38 +1,29 @@
 import React, { useState } from "react";
 import { Navbar, NavbarText, Button, Row, Col } from "reactstrap";
 import SearchForm from "./SearchForm";
+import AddForm from "./AddForm";
 
 const Landing = () => {
   const [searchForm, setSearchForm] = useState(false);
- 
+  const [addForm, setAddForm] = useState(false);
+
+  const reset = () => {
+    setSearchForm(false);
+    setAddForm(false);
+  };
+
+  const toggleSearchForm = () => {
+    reset();
+    setSearchForm(true);
+  };
+
+  const toggleAddForm = () => {
+    reset();
+    setAddForm(true);
+  };
 
   return (
     <>
-      {/* <Flex
-        as="nav"
-        align="center"
-        justify="space-between"
-        wrap="wrap"
-        padding="1.5rem"
-        bg="teal.500"
-        color="white"
-      >
-        <Flex align="center" mr={5}>
-          <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-            Manage Restaurants
-          </Heading>
-        </Flex>
-      </Flex>
-
-      <Flex justify="center">
-        <Flex as="container" justify="space-around" w="50%">
-          <Button as="button" onClick={() => setSearchForm(true)}>
-            Search
-          </Button>
-          <Box as="button">Add</Box>
-          <Box as="button">Delete</Box>
-        </Flex>
-      </Flex> */}
       <Navbar color="primary">
         <NavbarText>
           <h4>Manage Restaurants</h4>
@@ -40,13 +31,16 @@ const Landing = () => {
       </Navbar>
       <Row className="d-flex justify-content-center mt-3">
         <Col md="6" className="d-flex justify-content-around">
-          <Button onClick={() => setSearchForm(true)}>Search</Button>
-          <Button>Add</Button>
+          <Button onClick={() => toggleSearchForm()}>Search</Button>
+          <Button onClick={() => toggleAddForm()}>Add</Button>
           <Button>Delete</Button>
         </Col>
       </Row>
       <Row className="d-flex justify-content-center mt-3">
-        <Col md="8">{searchForm ? <SearchForm /> : null}</Col>
+        <Col md="8">
+          {searchForm ? <SearchForm /> : null}
+          {addForm ? <AddForm /> : null}
+        </Col>
       </Row>
     </>
   );
