@@ -5,7 +5,7 @@ module.exports = (mongoose) => {
     ],
     borough: String,
     cuisine: String,
-    grades: [{ date: Date, grade: String, score: Number }],
+    grades: [{ date: String, grade: String, score: Number }],
     name: String,
     restaurant_id: String,
   });

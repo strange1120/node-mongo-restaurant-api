@@ -8,11 +8,10 @@ import * as yup from "yup";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
-  restaurantId: yup.string().required(),
+  restaurant_id: yup.string().required(),
   address: yup.object().shape({
     building: yup.string().required(),
     street: yup.string().required(),
-    // coord: yup.array().of(yup.number().required()),
     latitude: yup.number().required(),
     longitude: yup.number().required(),
     zipCode: yup.string().required(),
@@ -22,8 +21,8 @@ const schema = yup.object().shape({
   grades: yup.array().of(
     yup.object().shape({
       date: yup.string().required(),
-      //   score: yup.number().required().positive(),
-      //   grade: yup.string().required(),
+      score: yup.number().required().positive(),
+      grade: yup.string().required(),
     })
   ),
 });
@@ -32,18 +31,49 @@ const AddForm = () => {
   const { register, handleSubmit, control } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      grades: [{ date: "" }],
+      grades: [{ date: "", score: 1, grade: "" }],
     },
   });
 
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
     values.address = {
       ...values.address,
       coord: [values.address.latitude, values.address.longitude],
     };
     delete values.address.latitude;
     delete values.address.longitude;
-    console.log(values);
+
+    let restaurant;
+    await RestaurantDataService.get(values.restaurant_id)
+      .then((response) => {
+        // setTutorials(response.data);
+        restaurant = response.data[0];
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+    if (restaurant !== null) {
+      await RestaurantDataService.update(restaurant.id, values)
+        .then((response) => {
+          // setTutorials(response.data);
+          // restaurant = response.data;
+          console.log(response.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+      await RestaurantDataService.create(values)
+        .then((response) => {
+          // setTutorials(response.data);
+          console.log(response.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   };
 
   return (
@@ -51,7 +81,6 @@ const AddForm = () => {
       <Row className="d-flex justify-content-center">
         <Col md="8">
           <h3>Add a Restaurant</h3>
-          {/* <FormProvider {...methods}> */}
           <Form onSubmit={handleSubmit(onSubmit)}>
             <FormGroup>
               <Label for="name">Name</Label>
@@ -70,9 +99,9 @@ const AddForm = () => {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label for="restaurantId">Restaurant ID</Label>
+                  <Label for="restaurant_id">Restaurant ID</Label>
                   <Input
-                    name="restaurantId"
+                    name="restaurant_id"
                     placeholder="Restaurant ID"
                     innerRef={register}
                   />
@@ -143,31 +172,11 @@ const AddForm = () => {
                 </FormGroup>
               </Col>
             </Row>
-            {/* <Row>
-              <Col md="4">
-                <FormGroup>
-                  <Label for="date">Date</Label>
-                  <Input name="date" placeholder="Date" innerRef={register} />
-                </FormGroup>
-              </Col>
-              <Col md="4">
-                <FormGroup>
-                  <Label for="grade">Grade</Label>
-                  <Input name="grade" placeholder="Grade" innerRef={register} />
-                </FormGroup>
-              </Col>
-              <Col md="4">
-                <FormGroup>
-                  <Label for="score">Score</Label>
-                  <Input name="score" placeholder="Score" innerRef={register} />
-                </FormGroup>
-              </Col>
-            </Row> */}
-
             <Grades register={register} control={control} />
-            <Button type="submit">Add</Button>
+            <Button className="mt-3" type="submit">
+              Add
+            </Button>
           </Form>
-          {/* </FormProvider> */}
         </Col>
       </Row>
     </>

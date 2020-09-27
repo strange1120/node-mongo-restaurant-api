@@ -13,7 +13,7 @@ const SearchForm = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (values) => {
-    findByTitle(values.restaurantId);
+    findByTitle(values.restaurant_id);
   };
 
   const findByTitle = (id) => {
@@ -107,9 +107,9 @@ const SearchForm = () => {
             ) : null}
             {restaurantIdChecked ? (
               <FormGroup>
-                <Label for="restaurantId">Restaurant ID</Label>
+                <Label for="restaurant_id">Restaurant ID</Label>
                 <Input
-                  name="restaurantId"
+                  name="restaurant_id"
                   placeholder="Restaurant ID"
                   innerRef={register}
                 />

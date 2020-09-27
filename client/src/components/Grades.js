@@ -21,6 +21,22 @@ const Grades = ({ register, control }) => {
               innerRef={register}
             />
           </Col>
+          <Col md="4">
+            <Label for="grades[${index}].score">Score</Label>
+            <Input
+              name={`grades[${index}].score`}
+              placeholder="Jane Doe"
+              innerRef={register}
+            />
+          </Col>
+          <Col md="4">
+            <Label for="grades[${index}].grade">Grade</Label>
+            <Input
+              name={`grades[${index}].grade`}
+              placeholder="Jane Doe"
+              innerRef={register}
+            />
+          </Col>
         </Row>
       ))}
     </>
