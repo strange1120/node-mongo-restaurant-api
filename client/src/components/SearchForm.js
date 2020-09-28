@@ -1,26 +1,32 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { Row, FormGroup, Form, Label, Input, Button, Col } from "reactstrap";
 import { useForm } from "react-hook-form";
 import RestaurantDataService from "../services/RestaurantService";
 
-const SearchForm = () => {
+const SearchForm = ({ reset }) => {
   const [nameChecked, setNameChecked] = useState(false);
   const [boroughChecked, setBoroughChecked] = useState(false);
   const [restaurantIdChecked, setRestaurantIdChecked] = useState(false);
   const [cuisineChecked, setCuisineChecked] = useState(false);
+  const [restaurants, setRestaurants] = useState([]);
   let [fieldCount, setFieldCount] = useState(0);
 
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (values) => {
     findByTitle(values.restaurant_id);
+    reset();
   };
 
   const findByTitle = (id) => {
     RestaurantDataService.get(id)
       .then((response) => {
-        // setTutorials(response.data);
+        setRestaurants(
+          response?.data?.filter((restaurant) => restaurant.deleted === true)
+        );
         console.log(response.data);
+        console.log(restaurants);
       })
       .catch((e) => {
         console.log(e);
@@ -137,6 +143,10 @@ const SearchForm = () => {
       </Row>
     </>
   );
+};
+
+SearchForm.propTypes = {
+  reset: PropTypes.func,
 };
 
 export default SearchForm;

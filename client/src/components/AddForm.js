@@ -1,6 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Row, FormGroup, Form, Label, Input, Button, Col } from "reactstrap";
-import { useForm, useFieldArray, FormProvider } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import RestaurantDataService from "../services/RestaurantService";
 import Grades from "./Grades";
 import { yupResolver } from "@hookform/resolvers";
@@ -27,7 +28,7 @@ const schema = yup.object().shape({
   ),
 });
 
-const AddForm = () => {
+const AddForm = ({ reset }) => {
   const { register, handleSubmit, control } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -40,13 +41,13 @@ const AddForm = () => {
       ...values.address,
       coord: [values.address.latitude, values.address.longitude],
     };
+
     delete values.address.latitude;
     delete values.address.longitude;
 
     let restaurant;
     await RestaurantDataService.get(values.restaurant_id)
       .then((response) => {
-        // setTutorials(response.data);
         restaurant = response.data[0];
         console.log(response.data);
       })
@@ -54,17 +55,16 @@ const AddForm = () => {
         console.log(e);
       });
 
-    if (restaurant !== null) {
+    if (restaurant !== undefined) {
       await RestaurantDataService.update(restaurant.id, values)
         .then((response) => {
-          // setTutorials(response.data);
-          // restaurant = response.data;
           console.log(response.data);
         })
         .catch((e) => {
           console.log(e);
         });
     } else {
+      values = { ...values, deleted: false };
       await RestaurantDataService.create(values)
         .then((response) => {
           // setTutorials(response.data);
@@ -74,6 +74,7 @@ const AddForm = () => {
           console.log(e);
         });
     }
+    reset();
   };
 
   return (
@@ -181,6 +182,10 @@ const AddForm = () => {
       </Row>
     </>
   );
+};
+
+AddForm.propTypes = {
+  reset: PropTypes.func,
 };
 
 export default AddForm;

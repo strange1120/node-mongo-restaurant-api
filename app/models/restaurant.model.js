@@ -8,6 +8,7 @@ module.exports = (mongoose) => {
     grades: [{ date: String, grade: String, score: Number }],
     name: String,
     restaurant_id: String,
+    deleted: Boolean,
   });
 
   schema.method("toJSON", function () {
