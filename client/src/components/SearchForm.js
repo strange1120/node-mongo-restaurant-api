@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Row, FormGroup, Form, Label, Input, Button, Col } from "reactstrap";
 import { useForm } from "react-hook-form";
+import ResultList from "./ResultList";
 import RestaurantDataService from "../services/RestaurantService";
 
 const SearchForm = ({ reset }) => {
@@ -11,22 +12,22 @@ const SearchForm = ({ reset }) => {
   const [cuisineChecked, setCuisineChecked] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
   let [fieldCount, setFieldCount] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
 
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (values) => {
     findByTitle(values.restaurant_id);
-    reset();
+    // reset();
+    setSubmitted(true);
   };
 
   const findByTitle = (id) => {
     RestaurantDataService.get(id)
       .then((response) => {
         setRestaurants(
-          response?.data?.filter((restaurant) => restaurant.deleted === true)
+          response?.data?.filter((restaurant) => restaurant.deleted === false)
         );
-        console.log(response.data);
-        console.log(restaurants);
       })
       .catch((e) => {
         console.log(e);
@@ -139,6 +140,9 @@ const SearchForm = ({ reset }) => {
             ) : null}
             {fieldCount > 0 ? <Button type="submit">Search</Button> : null}
           </Form>
+          {submitted === true ? (
+            <ResultList className="mt-2" restaurants={restaurants} />
+          ) : null}
         </Col>
       </Row>
     </>

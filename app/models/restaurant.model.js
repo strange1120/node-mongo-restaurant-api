@@ -1,8 +1,11 @@
 module.exports = (mongoose) => {
   const schema = mongoose.Schema({
-    address: [
-      { building: String, coord: [Number], street: String, zipcode: String },
-    ],
+    address: {
+      building: String,
+      coord: [Number],
+      street: String,
+      zipCode: String,
+    },
     borough: String,
     cuisine: String,
     grades: [{ date: String, grade: String, score: Number }],
