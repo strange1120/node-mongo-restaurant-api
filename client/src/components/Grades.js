@@ -1,20 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { Row, Label, Input, Button, Col } from "reactstrap";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import shortid from "shortid";
 
-const Grades = () => {
-  const { register, control } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
+const Grades = ({ grades }) => {
+  const { register, control, setValue } = useFormContext();
+  let { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
     name: "grades", // unique name for your Field Array
     // keyName: "id", default to "id", you can change the key name
   });
 
+  useEffect(() => {
+    if (grades !== undefined) {
+      grades.forEach((grade, index) => {
+        setValue(`grades[${index}].date`, grade.date);
+        setValue(`grades[${index}].score`, grade.score);
+        setValue(`grades[${index}].grade`, grade.grade);
+      });
+    }
+  }, [grades]);
+
   return (
     <>
-      {fields.map((grade, index) => (
-        <Row key={grade.id}>
+      {(grades || fields).map((grade, index) => (
+        <Row key={grade.id || grade._id}>
           <Col md="4">
             <Label for="grades[${index}].date">Date</Label>
             <Input
@@ -56,8 +66,6 @@ const Grades = () => {
             >
               Add Grade
             </Button>
-            {/* </Col> */}
-            {/* <Col md="1" className="d-flex align-items-end"> */}
             <Button
               type="button"
               className="secondary"
@@ -70,6 +78,10 @@ const Grades = () => {
       ))}
     </>
   );
+};
+
+Grades.propTypes = {
+  grades: PropTypes.array,
 };
 
 export default Grades;

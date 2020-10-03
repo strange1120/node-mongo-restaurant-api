@@ -73,7 +73,13 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
       methods.setValue("restaurant_id", restaurant.restaurant_id);
       methods.setValue("cuisine", restaurant.cuisine);
       methods.setValue("borough", restaurant.borough);
-      methods.setValue("grades", restaurant.grades);
+      //   methods.setValue("grades", restaurant.grades);
+      //   restaurant.grades.forEach((grade, index) => {
+      //     methods.setValue(`grades[${index}].id`, grade._id);
+      //     methods.setValue(`grades[${index}].date`, grade.date);
+      //     methods.setValue(`grades[${index}].score`, grade.score);
+      //     methods.setValue(`grades[${index}].grade`, grade.grade);
+      //   });
     }
   }, [restaurant]);
 
@@ -87,7 +93,7 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
       await RestaurantDataService.update(restaurant.id, values)
         .then((response) => {
           console.log(response.data);
-          setRestaurant(response.data);
+          //   setRestaurant(response.data);
         })
         .catch((e) => {
           console.log(e);
@@ -97,13 +103,13 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
       await RestaurantDataService.create(values)
         .then((response) => {
           console.log(response.data);
-          setRestaurant(response.data);
+          //   setRestaurant(response.data);
         })
         .catch((e) => {
           console.log(e);
         });
     }
-    methods.reset();
+    // methods.reset();
   };
 
   return (
@@ -208,7 +214,7 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                     </FormGroup>
                   </Col>
                 </Row>
-                <Grades />
+                <Grades grades={restaurant.grades} />
                 <Button className="mt-3" type="submit">
                   Add
                 </Button>
