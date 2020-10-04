@@ -73,17 +73,14 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
       methods.setValue("restaurant_id", restaurant.restaurant_id);
       methods.setValue("cuisine", restaurant.cuisine);
       methods.setValue("borough", restaurant.borough);
-      //   methods.setValue("grades", restaurant.grades);
-      //   restaurant.grades.forEach((grade, index) => {
-      //     methods.setValue(`grades[${index}].id`, grade._id);
-      //     methods.setValue(`grades[${index}].date`, grade.date);
-      //     methods.setValue(`grades[${index}].score`, grade.score);
-      //     methods.setValue(`grades[${index}].grade`, grade.grade);
-      //   });
+      methods.setValue("grades", restaurant.grades);
     }
   }, [restaurant]);
 
   const onSubmit = async (values) => {
+    const grades = methods.getValues("fields");
+    console.log(grades);
+
     values.address.coord = [values.address.latitude, values.address.longitude];
 
     delete values.address.latitude;
@@ -214,7 +211,8 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                     </FormGroup>
                   </Col>
                 </Row>
-                <Grades grades={restaurant.grades} />
+                {/* {watchGrades && */}
+                <Grades />
                 <Button className="mt-3" type="submit">
                   Add
                 </Button>
