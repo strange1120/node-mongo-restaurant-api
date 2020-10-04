@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
+import { useMount } from "react-use";
 import { Row, Label, Input, Button, Col } from "reactstrap";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
@@ -11,25 +12,29 @@ const Grades = ({ grades }) => {
     // keyName: "id", default to "id", you can change the key name
   });
 
-  useEffect(() => {
+  useMount(() => {
     if (grades !== undefined) {
-      grades.forEach((grade, index) => {
-        setValue(`grades[${index}].date`, grade.date);
-        setValue(`grades[${index}].score`, grade.score);
+      fields = [];
+      fields = grades;
+      console.log(fields);
+      fields.forEach((grade, index) => {
         setValue(`grades[${index}].grade`, grade.grade);
+        setValue(`grades[${index}].score`, grade.score);
+        setValue(`grades[${index}].date`, grade.date);
+        console.log(fields);
       });
     }
-  }, [grades]);
+  });
 
   return (
     <>
-      {(grades || fields).map((grade, index) => (
+      {fields.map((grade, index) => (
         <Row key={grade.id || grade._id}>
           <Col md="4">
             <Label for="grades[${index}].date">Date</Label>
             <Input
               name={`grades[${index}].date`}
-              placeholder="Jane Doe"
+              placeholder="Nov 20"
               innerRef={register}
             />
           </Col>
@@ -37,7 +42,7 @@ const Grades = ({ grades }) => {
             <Label for="grades[${index}].score">Score</Label>
             <Input
               name={`grades[${index}].score`}
-              placeholder="Jane Doe"
+              placeholder="9"
               innerRef={register}
             />
           </Col>
@@ -45,7 +50,7 @@ const Grades = ({ grades }) => {
             <Label for="grades[${index}].grade">Grade</Label>
             <Input
               name={`grades[${index}].grade`}
-              placeholder="Jane Doe"
+              placeholder="A"
               innerRef={register}
             />
           </Col>
