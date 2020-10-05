@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Grades from "./Grades";
 import { yupResolver } from "@hookform/resolvers";
 import { Row, FormGroup, Form, Label, Input, Button, Col } from "reactstrap";
@@ -28,7 +28,7 @@ const schema = yup.object().shape({
   ),
 });
 
-const defaultValues = {
+const _defaultValues = {
   name: "",
   restaurant_id: "",
   address: {
@@ -44,43 +44,48 @@ const defaultValues = {
 };
 
 const AddFormBody = ({ restaurant, setRestaurant }) => {
+  const [defaultValues, setDefaultValues] = useState(_defaultValues);
+
   const methods = useForm({
     resolver: yupResolver(schema),
-    defaultValues: defaultValues,
+    defaultValues: restaurant || defaultValues,
   });
 
-  const watchAllFields = methods.watch();
+  //   const watchAllFields = methods.watch();
 
-  useEffect(() => {
-    if (restaurant === undefined) {
-      methods.setValue("name", defaultValues.name);
-      methods.setValue("address.building", defaultValues.address.building);
-      methods.setValue("address.street", defaultValues.address.street);
-      methods.setValue("address.latitude", defaultValues.address.latitude);
-      methods.setValue("address.longitude", defaultValues.address.longitude);
-      methods.setValue("address.zipCode", defaultValues.address.zipCode);
-      methods.setValue("restaurant_id", defaultValues.restaurant_id);
-      methods.setValue("cuisine", defaultValues.cuisine);
-      methods.setValue("borough", defaultValues.borough);
-      methods.setValue("grades", defaultValues.grades);
-    } else {
-      methods.setValue("name", restaurant.name);
-      methods.setValue("address.building", restaurant.address.building);
-      methods.setValue("address.street", restaurant.address.street);
-      methods.setValue("address.latitude", restaurant.address.coord[0]);
-      methods.setValue("address.longitude", restaurant.address.coord[1]);
-      methods.setValue("address.zipCode", restaurant.address.zipCode);
-      methods.setValue("restaurant_id", restaurant.restaurant_id);
-      methods.setValue("cuisine", restaurant.cuisine);
-      methods.setValue("borough", restaurant.borough);
-      methods.setValue("grades", restaurant.grades);
-    }
-  }, [restaurant]);
+  //   useEffect(() => {
+  //     if (restaurant === undefined) {
+  //       methods.setValue("name", defaultValues.name);
+  //       methods.setValue("address.building", defaultValues.address.building);
+  //       methods.setValue("address.street", defaultValues.address.street);
+  //       methods.setValue("address.latitude", defaultValues.address.latitude);
+  //       methods.setValue("address.longitude", defaultValues.address.longitude);
+  //       methods.setValue("address.zipCode", defaultValues.address.zipCode);
+  //       methods.setValue("restaurant_id", defaultValues.restaurant_id);
+  //       methods.setValue("cuisine", defaultValues.cuisine);
+  //       methods.setValue("borough", defaultValues.borough);
+  //       methods.setValue("grades", defaultValues.grades);
+  //     } else {
+  //       methods.setValue("name", restaurant.name);
+  //       methods.setValue("address.building", restaurant.address.building);
+  //       methods.setValue("address.street", restaurant.address.street);
+  //       methods.setValue("address.latitude", restaurant.address.coord[0]);
+  //       methods.setValue("address.longitude", restaurant.address.coord[1]);
+  //       methods.setValue("address.zipCode", restaurant.address.zipCode);
+  //       methods.setValue("restaurant_id", restaurant.restaurant_id);
+  //       methods.setValue("cuisine", restaurant.cuisine);
+  //       methods.setValue("borough", restaurant.borough);
+  //       methods.setValue("grades", restaurant.grades);
+  //     }
+  //   }, [restaurant]);
+
+  //   useEffect(() => {
+  //     if (restaurant !== undefined) {
+  //       setDefaultValues(restaurant);
+  //     }
+  //   }, [restaurant]);
 
   const onSubmit = async (values) => {
-    const grades = methods.getValues("fields");
-    console.log(grades);
-
     values.address.coord = [values.address.latitude, values.address.longitude];
 
     delete values.address.latitude;
@@ -106,18 +111,17 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
           console.log(e);
         });
     }
-    // methods.reset();
   };
 
   return (
     <>
-      {watchAllFields && (
-        <FormProvider {...methods}>
-          <Row className="d-flex justify-content-center">
-            <Col md="8">
-              <h3>Add a Restaurant</h3>
-              <Form onSubmit={methods.handleSubmit(onSubmit)}>
-                <FormGroup>
+      {/* {watchAllFields && ( */}
+      <FormProvider {...methods}>
+        <Row className="d-flex justify-content-center">
+          <Col md="8">
+            <h3>Add a Restaurant</h3>
+            <Form onSubmit={methods.handleSubmit(onSubmit)}>
+              {/* <FormGroup>
                   <Label for="name">Name</Label>
                   <Input
                     name="name"
@@ -210,17 +214,17 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                       />
                     </FormGroup>
                   </Col>
-                </Row>
-                {/* {watchGrades && */}
-                <Grades />
-                <Button className="mt-3" type="submit">
-                  Add
-                </Button>
-              </Form>
-            </Col>
-          </Row>
-        </FormProvider>
-      )}
+                </Row> */}
+              {/* {watchGrades && */}
+              <Grades restaurant={restaurant} defaultValues={defaultValues} />
+              <Button className="mt-3" type="submit">
+                Add
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      </FormProvider>
+      {/* )} */}
     </>
   );
 };

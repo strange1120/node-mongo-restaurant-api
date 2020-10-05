@@ -5,9 +5,6 @@
 // const { MongoClient } = require("mongodb");
 // const cors = require("cors");
 
-// const connectionString =
-//   "mongodb+srv://Sarah:5XExSYViEAdQAGYa@restaurants.yxgpu.gcp.mongodb.net/Restaurant-Data?retryWrites=true&w=majority";
-
 // app.use(cors());
 // app.options("*", cors());
 // // app.use(bodyParser.urlencoded({ extended: true }));
