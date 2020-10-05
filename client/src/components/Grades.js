@@ -144,6 +144,7 @@ const Grades = ({ defaultValues, restaurant }) => {
                   name={`grades[${index}].date`}
                   placeholder="Nov 20"
                   innerRef={register}
+                  defaultValue={`${grade.date}`}
                 />
               </Col>
               <Col md="2">
@@ -152,6 +153,7 @@ const Grades = ({ defaultValues, restaurant }) => {
                   name={`grades[${index}].score`}
                   placeholder="9"
                   innerRef={register}
+                  defaultValue={`${grade.score}`}
                 />
               </Col>
               <Col md="2">
@@ -160,6 +162,7 @@ const Grades = ({ defaultValues, restaurant }) => {
                   name={`grades[${index}].grade`}
                   placeholder="A"
                   innerRef={register}
+                  defaultValue={`${grade.grade}`}
                 />
               </Col>
               <Col
