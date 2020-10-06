@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Row, Label, Input, FormGroup, Button, Col } from "reactstrap";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-const Grades = ({ defaultValues, restaurant }) => {
+const Grades = () => {
   const { register, control, setValue, reset, watch } = useFormContext();
   let { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
@@ -48,7 +48,7 @@ const Grades = ({ defaultValues, restaurant }) => {
       setValue(`grades[${index}].date`, grade.date);
       console.log(fields);
     });
-  }, [fields]);
+  }, [fields, setValue]);
 
   return (
     <>
@@ -195,11 +195,6 @@ const Grades = ({ defaultValues, restaurant }) => {
       </FormGroup>
     </>
   );
-};
-
-Grades.propTypes = {
-  defaultValues: PropTypes.object,
-  restaurant: PropTypes.object,
 };
 
 export default Grades;
