@@ -97,35 +97,3 @@ exports.update = (req, res) => {
     });
 };
 
-exports.update = (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data to update can not be empty!",
-    });
-  }
-
-  const id = req.params.id;
-
-  Restaurant.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot update Restaurant with id=${id}. Maybe Restaurant was not found!`,
-        });
-      } else res.send({ message: "Restaurant was updated successfully." });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error updating Restaurant with id=" + id,
-      });
-    });
-};
-
-// Delete a Restaurant with the specified id in the request
-exports.delete = (req, res) => {};
-
-// Delete all Restaurants from the database.
-exports.deleteAll = (req, res) => {};
-
-// Find all published Restaurants
-exports.findAllPublished = (req, res) => {};

@@ -6,11 +6,8 @@ module.exports = (app) => {
   // Create a new Restaurant
   router.post("/", restaurants.create);
 
-  // Retrieve all Restaurants
+  // Retrieve all Restaurants on search terms
   router.get("/", restaurants.findAll);
-
-  // Retrieve all published Restaurants
-  router.get("/published", restaurants.findAllPublished);
 
   // Retrieve a single Restaurant with id
   router.get("/:restaurant_id", restaurants.findOne);

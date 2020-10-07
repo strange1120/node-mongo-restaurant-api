@@ -24,7 +24,8 @@ const removeAll = () => {
   return http.delete(`/restaurants`);
 };
 
-const findByTitle = (restaurant_id) => {
+const search = (searchTerms) => {
+  // dynamic build string here 
   const response = http.get(`/restaurants?restaurant_id=${restaurant_id}`);
   console.log(response);
   return response;
