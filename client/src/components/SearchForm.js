@@ -14,16 +14,17 @@ const SearchForm = ({ reset }) => {
   let [fieldCount, setFieldCount] = useState(0);
   const [submitted, setSubmitted] = useState(false);
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState } = useForm();
 
   const onSubmit = (values) => {
-    findByTitle(values.restaurant_id);
+    // values = dirtyFields;
+    findByTitle(values);
     // reset();
     setSubmitted(true);
   };
 
-  const findByTitle = (id) => {
-    RestaurantDataService.get(id)
+  const findByTitle = (values) => {
+    RestaurantDataService.search(values)
       .then((response) => {
         setRestaurants(
           response?.data?.filter((restaurant) => restaurant.deleted === false)

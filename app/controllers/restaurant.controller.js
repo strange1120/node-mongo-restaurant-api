@@ -36,12 +36,20 @@ exports.create = (req, res) => {
 
 // Retrieve all Restaurants from the database.
 exports.findAll = (req, res) => {
-  const restaurant_id = req.query.restaurant_id;
-  var condition = title
-    ? { restaurant_id: { $regex: new RegExp(restaurant_id), $options: "i" } }
-    : {};
+  let conditions = [];
+  queryParams = Object.entries(req.query);
 
-  Tutorial.find(condition)
+  queryParams.forEach((param) => {
+    let condition = {
+      [param[0]]: { $regex: new RegExp(param[1]), $options: "i" },
+    };
+
+    conditions.push(condition);
+  });
+
+  Restaurant.find({
+    $and: conditions,
+  })
     .then((data) => {
       res.send(data);
     })
@@ -96,4 +104,3 @@ exports.update = (req, res) => {
       });
     });
 };
-

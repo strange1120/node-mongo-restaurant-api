@@ -25,8 +25,12 @@ const removeAll = () => {
 };
 
 const search = (searchTerms) => {
-  // dynamic build string here 
-  const response = http.get(`/restaurants?restaurant_id=${restaurant_id}`);
+  // dynamic build string here
+  // let _searchTerms = searchTerms.map((term) => `${term}=${term.value}&&`);
+  let _searchTerms = Object.entries(searchTerms);
+  _searchTerms = _searchTerms.map((term) => `${term[0]}=${term[1]}&&`);
+  _searchTerms = _searchTerms.join("").slice(0, -2);
+  const response = http.get(`/restaurants?${_searchTerms}`);
   console.log(response);
   return response;
 };
@@ -38,5 +42,5 @@ export default {
   update,
   remove,
   removeAll,
-  findByTitle,
+  search,
 };
