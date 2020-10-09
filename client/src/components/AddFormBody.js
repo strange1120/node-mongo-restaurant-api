@@ -8,27 +8,35 @@ import { useForm, FormProvider } from "react-hook-form";
 import RestaurantDataService from "../services/RestaurantService";
 
 const schema = yup.object().shape({
-  name: yup.string().required(),
-  restaurant_id: yup.string().required(),
+  name: yup.string().required("Name is a required field"),
+  restaurant_id: yup.string().required("Restaurant ID is a required field"),
   address: yup.object().shape({
-    building: yup.string().required(),
-    street: yup.string().required(),
-    latitude: yup.number().required(),
-    longitude: yup.number().required(),
-    zipCode: yup.string().required(),
+    building: yup.string().required("Building address is a required field"),
+    street: yup.string().required("Street address is a required field"),
+    latitude: yup
+      .number()
+      .positive()
+      .integer()
+      .required("Latitude is a required field"),
+    longitude: yup
+      .number()
+      .positive()
+      .integer()
+      .required("Longitude is a required field"),
+    zipCode: yup.string().required("ZipCode is a required field"),
   }),
-  cuisine: yup.string().required(),
-  borough: yup.string().required(),
+  cuisine: yup.string(),
+  borough: yup.string(),
   grades: yup.array().of(
     yup.object().shape({
-      date: yup.string().required(),
-      score: yup.number().required().positive(),
-      grade: yup.string().required(),
+      date: yup.string(),
+      score: yup.number().positive(),
+      grade: yup.string(),
     })
   ),
 });
 
-const _defaultValues = {
+const defaultValues = {
   name: "",
   restaurant_id: "",
   address: {
@@ -44,46 +52,38 @@ const _defaultValues = {
 };
 
 const AddFormBody = ({ restaurant, setRestaurant }) => {
-  const [defaultValues, setDefaultValues] = useState(_defaultValues);
-
   const methods = useForm({
     resolver: yupResolver(schema),
     defaultValues: restaurant || defaultValues,
   });
 
-  //   const watchAllFields = methods.watch();
+  const watchAllFields = methods.watch();
 
-  //   useEffect(() => {
-  //     if (restaurant === undefined) {
-  //       methods.setValue("name", defaultValues.name);
-  //       methods.setValue("address.building", defaultValues.address.building);
-  //       methods.setValue("address.street", defaultValues.address.street);
-  //       methods.setValue("address.latitude", defaultValues.address.latitude);
-  //       methods.setValue("address.longitude", defaultValues.address.longitude);
-  //       methods.setValue("address.zipCode", defaultValues.address.zipCode);
-  //       methods.setValue("restaurant_id", defaultValues.restaurant_id);
-  //       methods.setValue("cuisine", defaultValues.cuisine);
-  //       methods.setValue("borough", defaultValues.borough);
-  //       methods.setValue("grades", defaultValues.grades);
-  //     } else {
-  //       methods.setValue("name", restaurant.name);
-  //       methods.setValue("address.building", restaurant.address.building);
-  //       methods.setValue("address.street", restaurant.address.street);
-  //       methods.setValue("address.latitude", restaurant.address.coord[0]);
-  //       methods.setValue("address.longitude", restaurant.address.coord[1]);
-  //       methods.setValue("address.zipCode", restaurant.address.zipCode);
-  //       methods.setValue("restaurant_id", restaurant.restaurant_id);
-  //       methods.setValue("cuisine", restaurant.cuisine);
-  //       methods.setValue("borough", restaurant.borough);
-  //       methods.setValue("grades", restaurant.grades);
-  //     }
-  //   }, [restaurant]);
-
-  //   useEffect(() => {
-  //     if (restaurant !== undefined) {
-  //       setDefaultValues(restaurant);
-  //     }
-  //   }, [restaurant]);
+  useEffect(() => {
+    if (restaurant === undefined) {
+      methods.setValue("name", defaultValues.name);
+      methods.setValue("address.building", defaultValues.address.building);
+      methods.setValue("address.street", defaultValues.address.street);
+      methods.setValue("address.latitude", defaultValues.address.latitude);
+      methods.setValue("address.longitude", defaultValues.address.longitude);
+      methods.setValue("address.zipCode", defaultValues.address.zipCode);
+      methods.setValue("restaurant_id", defaultValues.restaurant_id);
+      methods.setValue("cuisine", defaultValues.cuisine);
+      methods.setValue("borough", defaultValues.borough);
+      methods.setValue("grades", defaultValues.grades);
+    } else {
+      methods.setValue("name", restaurant.name);
+      methods.setValue("address.building", restaurant.address.building);
+      methods.setValue("address.street", restaurant.address.street);
+      methods.setValue("address.latitude", restaurant.address.coord[0]);
+      methods.setValue("address.longitude", restaurant.address.coord[1]);
+      methods.setValue("address.zipCode", restaurant.address.zipCode);
+      methods.setValue("restaurant_id", restaurant.restaurant_id);
+      methods.setValue("cuisine", restaurant.cuisine);
+      methods.setValue("borough", restaurant.borough);
+      methods.setValue("grades", restaurant.grades);
+    }
+  }, [restaurant]);
 
   const onSubmit = async (values) => {
     values.address.coord = [values.address.latitude, values.address.longitude];
@@ -115,19 +115,20 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
 
   return (
     <>
-      {/* {watchAllFields && ( */}
-      <FormProvider {...methods}>
-        <Row className="d-flex justify-content-center">
-          <Col md="8">
-            <h3>Add a Restaurant</h3>
-            <Form onSubmit={methods.handleSubmit(onSubmit)}>
-              {/* <FormGroup>
+      {watchAllFields && (
+        <FormProvider {...methods}>
+          <Row className="d-flex justify-content-center">
+            <Col md="8">
+              <h3>Add a Restaurant</h3>
+              <Form onSubmit={methods.handleSubmit(onSubmit)}>
+                <FormGroup>
                   <Label for="name">Name</Label>
                   <Input
                     name="name"
                     placeholder="Name"
                     innerRef={methods.register}
                   />
+                  <p className="mt-2">{methods.errors.name?.message}</p>
                 </FormGroup>
                 <Row>
                   <Col md="6">
@@ -138,6 +139,9 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                         placeholder="Street"
                         innerRef={methods.register}
                       />
+                      <p className="mt-2">
+                        {methods.errors.address?.street?.message}
+                      </p>
                     </FormGroup>
                   </Col>
                   <Col md="6">
@@ -148,6 +152,9 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                         placeholder="Restaurant ID"
                         innerRef={methods.register}
                       />
+                      <p className="mt-2">
+                        {methods.errors.restaurant_id?.message}
+                      </p>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -160,6 +167,9 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                         placeholder="Latitude"
                         innerRef={methods.register}
                       />
+                      <p className="mt-2">
+                        {methods.errors.address?.latitude?.message}
+                      </p>
                     </FormGroup>
                   </Col>
                   <Col md="4">
@@ -170,6 +180,9 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                         placeholder="Longitude"
                         innerRef={methods.register}
                       />
+                      <p className="mt-2">
+                        {methods.errors.address?.longitude?.message}
+                      </p>
                     </FormGroup>
                   </Col>
                   <Col md="4">
@@ -180,6 +193,9 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                         placeholder="Building"
                         innerRef={methods.register}
                       />
+                      <p className="mt-2">
+                        {methods.errors.address?.building?.message}
+                      </p>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -192,6 +208,9 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                         placeholder="Zip Code"
                         innerRef={methods.register}
                       />
+                      <p className="mt-2">
+                        {methods.errors.address?.zipCode?.message}
+                      </p>
                     </FormGroup>
                   </Col>
                   <Col md="4">
@@ -214,17 +233,17 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
                       />
                     </FormGroup>
                   </Col>
-                </Row> */}
-              {/* {watchGrades && */}
-              <Grades restaurant={restaurant} defaultValues={defaultValues} />
-              <Button className="mt-3" type="submit">
-                Add
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-      </FormProvider>
-      {/* )} */}
+                </Row>
+                {/* {watchGrades && */}
+                <Grades />
+                <Button className="mt-3" type="submit">
+                  Add
+                </Button>
+              </Form>
+            </Col>
+          </Row>
+        </FormProvider>
+      )}
     </>
   );
 };
