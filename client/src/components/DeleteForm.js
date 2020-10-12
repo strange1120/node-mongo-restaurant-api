@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Row, FormGroup, Form, Label, Input, Button, Col } from "reactstrap";
 import { useForm } from "react-hook-form";
@@ -6,8 +6,11 @@ import RestaurantDataService from "../services/RestaurantService";
 
 const DeleteForm = ({ reset }) => {
   const { register, handleSubmit } = useForm();
+  const [notFound, setNotFound] = useState(null);
+  const [restaurantId, setRestaurantId] = useState("");
 
   const onSubmit = async (values) => {
+    setNotFound(false);
     let restaurant;
     await RestaurantDataService.get(values.restaurant_id)
       .then((response) => {
@@ -27,8 +30,11 @@ const DeleteForm = ({ reset }) => {
         .catch((e) => {
           console.log(e);
         });
+      reset();
+    } else {
+      setRestaurantId(values.restaurant_id)
+      setNotFound(true);
     }
-    reset();
   };
 
   return (
@@ -47,6 +53,7 @@ const DeleteForm = ({ reset }) => {
             </FormGroup>
             <Button type="submit">Search</Button>
           </Form>
+          {notFound ? <h5 className="mt-3">No restaurant found</h5> : null}
         </Col>
       </Row>
     </>
