@@ -1,6 +1,13 @@
 const db = require("../models");
 const Restaurant = db.restaurants;
 
+const getPagination = (page, size) => {
+  const limit = size ? +size : 5;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
+
 // Create and Save a new Restaurant
 exports.create = (req, res) => {
   // Validate request
@@ -37,6 +44,10 @@ exports.create = (req, res) => {
 // Retrieve all Restaurants from the database.
 exports.findAll = (req, res) => {
   let conditions = [];
+  const { page, pageSize } = req.query;
+  delete req.query.pageSize;
+  delete req.query.page;
+
   queryParams = Object.entries(req.query);
 
   queryParams.forEach((param) => {
@@ -47,11 +58,28 @@ exports.findAll = (req, res) => {
     conditions.push(condition);
   });
 
-  Restaurant.find({
-    $and: conditions,
-  })
+  const { limit, offset } = getPagination(page, pageSize);
+
+  Restaurant.paginate(
+    {
+      $and: [
+        ...conditions,
+        {
+          deleted: {
+            $ne: true,
+          },
+        },
+      ],
+    },
+    { offset, limit }
+  )
     .then((data) => {
-       res.send(data);
+      res.send({
+        totalItems: data.totalDocs,
+        restaurants: data.docs,
+        totalPages: data.totalPages,
+        currentPage: data.page - 1,
+      });
     })
     .catch((err) => {
       res.status(500).send({
