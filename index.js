@@ -1,6 +1,5 @@
 // const express = require("express");
 // const bodyParser = require("body-parser");
-// const path = require("path");
 // const app = express();
 // const { MongoClient } = require("mongodb");
 // const cors = require("cors");
@@ -8,7 +7,7 @@
 // app.use(cors());
 // app.options("*", cors());
 // // app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.static(path.join(__dirname, "/client/build")));
+
 // // app.use(morgan('tiny'))
 
 // // app.post("/", (req, res) => {
@@ -47,9 +46,7 @@
 //   res.send(`Hello ${name}!`);
 // });
 
-// app.get("/*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "/client/build/index.html"));
-// });
+
 
 // testing syncing
 // module.exports = app;
@@ -61,6 +58,8 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const path = require("path");
+
 const cors = require("cors");
 
 const app = express();
@@ -71,6 +70,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(express.static(path.join(__dirname, "/client/build")));
+
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
@@ -78,11 +79,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // simple route
-app.get("/", (req, res) => {
-  res.json({ message: "hello there" });
-});
+// app.get("/", (req, res) => {
+//   res.json({ message: "hello there" });
+// });
+
+
 
 require("./app/routes/restaurant.routes")(app);
+
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/client/build/index.html"));
+});
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

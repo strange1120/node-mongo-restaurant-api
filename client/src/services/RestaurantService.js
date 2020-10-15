@@ -16,21 +16,12 @@ const update = (id, data) => {
   return http.put(`/restaurants/${id}`, data);
 };
 
-const remove = (id) => {
-  return http.delete(`/restaurants/${id}`);
-};
-
-const removeAll = () => {
-  return http.delete(`/restaurants`);
-};
-
-const search = (searchTerms) => {
-  // dynamic build string here
-  // let _searchTerms = searchTerms.map((term) => `${term}=${term.value}&&`);
+const search = (searchTerms, page, pageSize) => {
   let _searchTerms = Object.entries(searchTerms);
   _searchTerms = _searchTerms.map((term) => `${term[0]}=${term[1]}&&`);
-  _searchTerms = _searchTerms.join("").slice(0, -2);
-  const response = http.get(`/restaurants?${_searchTerms}`);
+  const response = http.get(
+    `/restaurants?${_searchTerms}page=${page}&&pageSize=${pageSize}`
+  );
   console.log(response);
   return response;
 };
@@ -40,7 +31,5 @@ export default {
   get,
   create,
   update,
-  remove,
-  removeAll,
   search,
 };

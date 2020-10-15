@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { Row, FormGroup, Form, Label, Input, Button, Col } from "reactstrap";
 import { useForm } from "react-hook-form";
 import RestaurantDataService from "../services/RestaurantService";
-import { yupResolver } from "@hookform/resolvers";
-import * as yup from "yup";
 import AddFormBody from "./AddFormBody";
 
-const AddForm = ({ reset }) => {
+const AddForm = () => {
   const [restaurant, setRestaurant] = useState(undefined);
   const [searchSubmitted, setSearchSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const { register, handleSubmit } = useForm();
 
@@ -17,12 +15,16 @@ const AddForm = ({ reset }) => {
     await RestaurantDataService.get(values.restaurant_id)
       .then((response) => {
         if (response.data.length > 0) {
-          setRestaurant(response.data[0]);
+          if (response.data[0].deleted === true) {
+            setRestaurant(undefined);
+          } else {
+            setRestaurant(response.data[0]);
+          }
         } else {
           setRestaurant(undefined);
         }
         setSearchSubmitted(true);
-        console.log(response.data);
+        setSubmitted(false);
       })
       .catch((e) => {
         console.log(e);
@@ -47,14 +49,15 @@ const AddForm = ({ reset }) => {
         </Col>
       </Row>
       {searchSubmitted === true ? (
-        <AddFormBody restaurant={restaurant} setRestaurant={setRestaurant} />
+        <AddFormBody
+          restaurant={restaurant}
+          setRestaurant={setRestaurant}
+          setSubmitted={setSubmitted}
+          submitted={submitted}
+        />
       ) : null}
     </>
   );
-};
-
-AddForm.propTypes = {
-  reset: PropTypes.func,
 };
 
 export default AddForm;

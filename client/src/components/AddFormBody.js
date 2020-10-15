@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Grades from "./Grades";
 import { yupResolver } from "@hookform/resolvers";
 import { Row, FormGroup, Form, Label, Input, Button, Col } from "reactstrap";
@@ -51,10 +51,10 @@ const defaultValues = {
   grades: [{ date: "", score: 1, grade: "" }],
 };
 
-const AddFormBody = ({ restaurant, setRestaurant }) => {
+const AddFormBody = ({ restaurant, submitted, setSubmitted }) => {
   const methods = useForm({
     resolver: yupResolver(schema),
-    defaultValues: restaurant || defaultValues,
+    defaultValues: defaultValues,
   });
 
   const watchAllFields = methods.watch();
@@ -92,10 +92,10 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
     delete values.address.longitude;
 
     if (restaurant !== undefined) {
+      values = { ...values, deleted: false };
       await RestaurantDataService.update(restaurant.id, values)
         .then((response) => {
           console.log(response.data);
-          //   setRestaurant(response.data);
         })
         .catch((e) => {
           console.log(e);
@@ -105,152 +105,163 @@ const AddFormBody = ({ restaurant, setRestaurant }) => {
       await RestaurantDataService.create(values)
         .then((response) => {
           console.log(response.data);
-          //   setRestaurant(response.data);
         })
         .catch((e) => {
           console.log(e);
         });
     }
+    setSubmitted(true);
   };
 
+  if (submitted === false) {
+    return (
+      <>
+        {watchAllFields && (
+          <FormProvider {...methods}>
+            <Row className="d-flex justify-content-center">
+              <Col md="8">
+                <h3>Add a Restaurant</h3>
+                <Form onSubmit={methods.handleSubmit(onSubmit)}>
+                  <FormGroup>
+                    <Label for="name">Name</Label>
+                    <Input
+                      name="name"
+                      placeholder="Name"
+                      innerRef={methods.register}
+                    />
+                    <p className="mt-2">{methods.errors.name?.message}</p>
+                  </FormGroup>
+                  <Row>
+                    <Col md="6">
+                      <FormGroup>
+                        <Label for="street">Street</Label>
+                        <Input
+                          name="address.street"
+                          placeholder="Street"
+                          innerRef={methods.register}
+                        />
+                        <p className="mt-2">
+                          {methods.errors.address?.street?.message}
+                        </p>
+                      </FormGroup>
+                    </Col>
+                    <Col md="6">
+                      <FormGroup>
+                        <Label for="restaurant_id">Restaurant ID</Label>
+                        <Input
+                          name="restaurant_id"
+                          placeholder="Restaurant ID"
+                          innerRef={methods.register}
+                        />
+                        <p className="mt-2">
+                          {methods.errors.restaurant_id?.message}
+                        </p>
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="latitude">Latitude</Label>
+                        <Input
+                          name="address.latitude"
+                          placeholder="Latitude"
+                          innerRef={methods.register}
+                        />
+                        <p className="mt-2">
+                          {methods.errors.address?.latitude?.message}
+                        </p>
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="longitude">Longitude</Label>
+                        <Input
+                          name="address.longitude"
+                          placeholder="Longitude"
+                          innerRef={methods.register}
+                        />
+                        <p className="mt-2">
+                          {methods.errors.address?.longitude?.message}
+                        </p>
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="building">Building</Label>
+                        <Input
+                          name="address.building"
+                          placeholder="Building"
+                          innerRef={methods.register}
+                        />
+                        <p className="mt-2">
+                          {methods.errors.address?.building?.message}
+                        </p>
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="zipCode">Zip Code</Label>
+                        <Input
+                          name="address.zipCode"
+                          placeholder="Zip Code"
+                          innerRef={methods.register}
+                        />
+                        <p className="mt-2">
+                          {methods.errors.address?.zipCode?.message}
+                        </p>
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="borough">Borough</Label>
+                        <Input
+                          name="borough"
+                          placeholder="Borough"
+                          innerRef={methods.register}
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="cuisine">Cuisine</Label>
+                        <Input
+                          name="cuisine"
+                          placeholder="Cuisine"
+                          innerRef={methods.register}
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Grades />
+                  <Button className="mt-3" type="submit">
+                    Add
+                  </Button>
+                </Form>
+              </Col>
+            </Row>
+          </FormProvider>
+        )}
+      </>
+    );
+  }
   return (
     <>
-      {watchAllFields && (
-        <FormProvider {...methods}>
-          <Row className="d-flex justify-content-center">
-            <Col md="8">
-              <h3>Add a Restaurant</h3>
-              <Form onSubmit={methods.handleSubmit(onSubmit)}>
-                <FormGroup>
-                  <Label for="name">Name</Label>
-                  <Input
-                    name="name"
-                    placeholder="Name"
-                    innerRef={methods.register}
-                  />
-                  <p className="mt-2">{methods.errors.name?.message}</p>
-                </FormGroup>
-                <Row>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label for="street">Street</Label>
-                      <Input
-                        name="address.street"
-                        placeholder="Street"
-                        innerRef={methods.register}
-                      />
-                      <p className="mt-2">
-                        {methods.errors.address?.street?.message}
-                      </p>
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label for="restaurant_id">Restaurant ID</Label>
-                      <Input
-                        name="restaurant_id"
-                        placeholder="Restaurant ID"
-                        innerRef={methods.register}
-                      />
-                      <p className="mt-2">
-                        {methods.errors.restaurant_id?.message}
-                      </p>
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md="4">
-                    <FormGroup>
-                      <Label for="latitude">Latitude</Label>
-                      <Input
-                        name="address.latitude"
-                        placeholder="Latitude"
-                        innerRef={methods.register}
-                      />
-                      <p className="mt-2">
-                        {methods.errors.address?.latitude?.message}
-                      </p>
-                    </FormGroup>
-                  </Col>
-                  <Col md="4">
-                    <FormGroup>
-                      <Label for="longitude">Longitude</Label>
-                      <Input
-                        name="address.longitude"
-                        placeholder="Longitude"
-                        innerRef={methods.register}
-                      />
-                      <p className="mt-2">
-                        {methods.errors.address?.longitude?.message}
-                      </p>
-                    </FormGroup>
-                  </Col>
-                  <Col md="4">
-                    <FormGroup>
-                      <Label for="building">Building</Label>
-                      <Input
-                        name="address.building"
-                        placeholder="Building"
-                        innerRef={methods.register}
-                      />
-                      <p className="mt-2">
-                        {methods.errors.address?.building?.message}
-                      </p>
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md="4">
-                    <FormGroup>
-                      <Label for="zipCode">Zip Code</Label>
-                      <Input
-                        name="address.zipCode"
-                        placeholder="Zip Code"
-                        innerRef={methods.register}
-                      />
-                      <p className="mt-2">
-                        {methods.errors.address?.zipCode?.message}
-                      </p>
-                    </FormGroup>
-                  </Col>
-                  <Col md="4">
-                    <FormGroup>
-                      <Label for="borough">Borough</Label>
-                      <Input
-                        name="borough"
-                        placeholder="Borough"
-                        innerRef={methods.register}
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md="4">
-                    <FormGroup>
-                      <Label for="cuisine">Cuisine</Label>
-                      <Input
-                        name="cuisine"
-                        placeholder="Cuisine"
-                        innerRef={methods.register}
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-                {/* {watchGrades && */}
-                <Grades />
-                <Button className="mt-3" type="submit">
-                  Add
-                </Button>
-              </Form>
-            </Col>
-          </Row>
-        </FormProvider>
-      )}
+      <Row className="d-flex justify-content-center">
+        <Col md="8">
+          <h4>Restaurant was saved successfully</h4>
+        </Col>
+      </Row>
     </>
   );
 };
 
 AddFormBody.propTypes = {
   restaurant: PropTypes.object,
-  setRestaurant: PropTypes.func,
+  setSubmitted: PropTypes.func,
+  submitted: PropTypes.bool,
 };
 
 export default AddFormBody;

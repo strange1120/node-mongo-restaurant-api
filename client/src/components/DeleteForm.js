@@ -1,40 +1,46 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { Row, FormGroup, Form, Label, Input, Button, Col } from "reactstrap";
 import { useForm } from "react-hook-form";
 import RestaurantDataService from "../services/RestaurantService";
+import Restaurant from "./Restaurant";
 
-const DeleteForm = ({ reset }) => {
+const DeleteForm = () => {
   const { register, handleSubmit } = useForm();
-  const [notFound, setNotFound] = useState(null);
-  const [restaurantId, setRestaurantId] = useState("");
+  const [notFound, setNotFound] = useState(false);
+  const [restaurant, setRestaurant] = useState(undefined);
 
-  const onSubmit = async (values) => {
+  const search = async (values) => {
+    setRestaurant(undefined);
     setNotFound(false);
-    let restaurant;
     await RestaurantDataService.get(values.restaurant_id)
       .then((response) => {
-        restaurant = response.data[0];
+        if (response.data[0]) {
+          if (response.data[0].deleted === true) {
+            setNotFound(true);
+          } else {
+            setRestaurant(response.data[0]);
+          }
+        } else {
+          setNotFound(true);
+        }
       })
       .catch((e) => {
         console.log(e);
       });
+  };
 
-    if (restaurant !== undefined) {
-      restaurant.deleted = true;
+  const deleteRestaurant = async (restaurant) => {
+    restaurant.deleted = true;
 
-      await RestaurantDataService.update(restaurant.id, restaurant)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-      reset();
-    } else {
-      setRestaurantId(values.restaurant_id)
-      setNotFound(true);
-    }
+    await RestaurantDataService.update(restaurant.id, restaurant)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    setNotFound(false);
+    setRestaurant(undefined);
   };
 
   return (
@@ -42,7 +48,7 @@ const DeleteForm = ({ reset }) => {
       <Row className="d-flex justify-content-center">
         <Col md="8">
           <h3>Enter a Restaurant ID to Delete</h3>
-          <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form onSubmit={handleSubmit(search)}>
             <FormGroup>
               <Label for="restaurant_id">Restaurant ID</Label>
               <Input
@@ -53,15 +59,24 @@ const DeleteForm = ({ reset }) => {
             </FormGroup>
             <Button type="submit">Search</Button>
           </Form>
-          {notFound ? <h5 className="mt-3">No restaurant found</h5> : null}
+          {restaurant ? (
+            <>
+              <Restaurant restaurant={restaurant} />
+              <Button
+                type="button"
+                onClick={() => deleteRestaurant(restaurant)}
+              >
+                Delete Restaurant
+              </Button>
+            </>
+          ) : null}
+          {notFound === true ? (
+            <h5 className="mt-3">No restaurant found</h5>
+          ) : null}
         </Col>
       </Row>
     </>
   );
-};
-
-DeleteForm.propTypes = {
-  reset: PropTypes.func,
 };
 
 export default DeleteForm;

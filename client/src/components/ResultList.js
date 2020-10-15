@@ -7,8 +7,8 @@ const ResultList = ({ restaurants }) => {
     <>
       <ListGroup className="mt-3">
         {restaurants.map((restaurant) => (
-          <ListGroupItem key={restaurant.id}>
-            <Restaurant key={restaurant.id} restaurant={restaurant} />
+          <ListGroupItem key={restaurant._id}>
+            <Restaurant key={restaurant._id} restaurant={restaurant} />
           </ListGroupItem>
         ))}
       </ListGroup>
