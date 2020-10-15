@@ -13,17 +13,9 @@ const schema = yup.object().shape({
   address: yup.object().shape({
     building: yup.string().required("Building address is a required field"),
     street: yup.string().required("Street address is a required field"),
-    latitude: yup
-      .number()
-      .positive()
-      .integer()
-      .required("Latitude is a required field"),
-    longitude: yup
-      .number()
-      .positive()
-      .integer()
-      .required("Longitude is a required field"),
-    zipCode: yup.string().required("ZipCode is a required field"),
+    latitude: yup.number().required("Latitude is a required field"),
+    longitude: yup.number().required("Longitude is a required field"),
+    zipcode: yup.string().required("ZipCode is a required field"),
   }),
   cuisine: yup.string(),
   borough: yup.string(),
@@ -44,7 +36,7 @@ const defaultValues = {
     street: "",
     latitude: 1,
     longitude: 1,
-    zipCode: "",
+    zipcode: "",
   },
   cuisine: "",
   borough: "",
@@ -60,24 +52,13 @@ const AddFormBody = ({ restaurant, submitted, setSubmitted }) => {
   const watchAllFields = methods.watch();
 
   useEffect(() => {
-    if (restaurant === undefined) {
-      methods.setValue("name", defaultValues.name);
-      methods.setValue("address.building", defaultValues.address.building);
-      methods.setValue("address.street", defaultValues.address.street);
-      methods.setValue("address.latitude", defaultValues.address.latitude);
-      methods.setValue("address.longitude", defaultValues.address.longitude);
-      methods.setValue("address.zipCode", defaultValues.address.zipCode);
-      methods.setValue("restaurant_id", defaultValues.restaurant_id);
-      methods.setValue("cuisine", defaultValues.cuisine);
-      methods.setValue("borough", defaultValues.borough);
-      methods.setValue("grades", defaultValues.grades);
-    } else {
+    if (restaurant !== undefined) {
       methods.setValue("name", restaurant.name);
       methods.setValue("address.building", restaurant.address.building);
       methods.setValue("address.street", restaurant.address.street);
       methods.setValue("address.latitude", restaurant.address.coord[0]);
       methods.setValue("address.longitude", restaurant.address.coord[1]);
-      methods.setValue("address.zipCode", restaurant.address.zipCode);
+      methods.setValue("address.zipcode", restaurant.address.zipcode);
       methods.setValue("restaurant_id", restaurant.restaurant_id);
       methods.setValue("cuisine", restaurant.cuisine);
       methods.setValue("borough", restaurant.borough);
@@ -123,7 +104,7 @@ const AddFormBody = ({ restaurant, submitted, setSubmitted }) => {
                 <h3>Add a Restaurant</h3>
                 <Form onSubmit={methods.handleSubmit(onSubmit)}>
                   <FormGroup>
-                    <Label for="name">Name</Label>
+                    <Label for="name">Name (Required)</Label>
                     <Input
                       name="name"
                       placeholder="Name"
@@ -134,7 +115,7 @@ const AddFormBody = ({ restaurant, submitted, setSubmitted }) => {
                   <Row>
                     <Col md="6">
                       <FormGroup>
-                        <Label for="street">Street</Label>
+                        <Label for="street">Street (Required)</Label>
                         <Input
                           name="address.street"
                           placeholder="Street"
@@ -147,7 +128,9 @@ const AddFormBody = ({ restaurant, submitted, setSubmitted }) => {
                     </Col>
                     <Col md="6">
                       <FormGroup>
-                        <Label for="restaurant_id">Restaurant ID</Label>
+                        <Label for="restaurant_id">
+                          Restaurant ID (Required)
+                        </Label>
                         <Input
                           name="restaurant_id"
                           placeholder="Restaurant ID"
@@ -162,7 +145,7 @@ const AddFormBody = ({ restaurant, submitted, setSubmitted }) => {
                   <Row>
                     <Col md="4">
                       <FormGroup>
-                        <Label for="latitude">Latitude</Label>
+                        <Label for="latitude">Latitude (Required)</Label>
                         <Input
                           name="address.latitude"
                           placeholder="Latitude"
@@ -175,7 +158,7 @@ const AddFormBody = ({ restaurant, submitted, setSubmitted }) => {
                     </Col>
                     <Col md="4">
                       <FormGroup>
-                        <Label for="longitude">Longitude</Label>
+                        <Label for="longitude">Longitude (Required)</Label>
                         <Input
                           name="address.longitude"
                           placeholder="Longitude"
@@ -188,7 +171,7 @@ const AddFormBody = ({ restaurant, submitted, setSubmitted }) => {
                     </Col>
                     <Col md="4">
                       <FormGroup>
-                        <Label for="building">Building</Label>
+                        <Label for="building">Building (Required)</Label>
                         <Input
                           name="address.building"
                           placeholder="Building"
@@ -203,14 +186,14 @@ const AddFormBody = ({ restaurant, submitted, setSubmitted }) => {
                   <Row>
                     <Col md="4">
                       <FormGroup>
-                        <Label for="zipCode">Zip Code</Label>
+                        <Label for="zipcode">Zip Code (Required)</Label>
                         <Input
-                          name="address.zipCode"
+                          name="address.zipcode"
                           placeholder="Zip Code"
                           innerRef={methods.register}
                         />
                         <p className="mt-2">
-                          {methods.errors.address?.zipCode?.message}
+                          {methods.errors.address?.zipcode?.message}
                         </p>
                       </FormGroup>
                     </Col>

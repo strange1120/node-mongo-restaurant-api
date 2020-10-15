@@ -4,7 +4,7 @@ module.exports = (mongoose, mongoosePaginate) => {
       building: String,
       coord: [Number],
       street: String,
-      zipCode: String,
+      zipcode: String,
     },
     borough: String,
     cuisine: String,

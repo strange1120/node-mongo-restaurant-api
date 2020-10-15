@@ -23,6 +23,7 @@
     "react-reactstrap-pagination": "^2.0.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "react-select": "^3.1.0",
     "react-use": "^15.3.4",
     "reactstrap": "^8.6.0",
     "shortid": "^2.2.15",

@@ -22,7 +22,6 @@ const search = (searchTerms, page, pageSize) => {
   const response = http.get(
     `/restaurants?${_searchTerms}page=${page}&&pageSize=${pageSize}`
   );
-  console.log(response);
   return response;
 };
 

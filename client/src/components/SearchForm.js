@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import PaginationComponent from "react-reactstrap-pagination";
 import ResultList from "./ResultList";
 import RestaurantDataService from "../services/RestaurantService";
+import ResultOptions from "./ResultOptions";
 
 const SearchForm = () => {
   const [nameChecked, setNameChecked] = useState(false);
@@ -15,11 +16,28 @@ const SearchForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [model, setModel] = useState({});
 
   const { register, handleSubmit, getValues } = useForm();
 
+  const _model = {
+    name: true,
+    cuisine: true,
+    building: true,
+    latitude: true,
+    longitude: true,
+    street: true,
+    zipcode: true,
+    grades: true,
+    borough: true,
+    restaurant_id: true,
+  };
+
   const onSubmit = (values) => {
     setSubmitted(false);
+    if (model !== {}) {
+      setModel(_model);
+    }
     search(values);
     setSubmitted(true);
   };
@@ -84,7 +102,7 @@ const SearchForm = () => {
   return (
     <>
       <Row className="d-flex justify-content-center">
-        <Col md="8">
+        <Col md="12">
           <h3>Select fields to search on</h3>
           <Form>
             <FormGroup check inline>
@@ -151,10 +169,18 @@ const SearchForm = () => {
             ) : null}
             {fieldCount > 0 ? <Button type="submit">Search</Button> : null}
           </Form>
+          <h5 className="mt-2">
+            Please select which fields you would like to see results for
+          </h5>
+          <ResultOptions setModel={setModel} />
           {submitted === true ? (
             restaurants.length > 0 ? (
               <>
-                <ResultList className="mt-2" restaurants={restaurants} />
+                <ResultList
+                  className="mt-2"
+                  restaurants={restaurants}
+                  model={model}
+                />
                 <PaginationComponent
                   pageSize={5}
                   onSelect={handlePageChange}
