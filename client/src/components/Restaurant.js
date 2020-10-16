@@ -11,7 +11,7 @@ const Restaurant = ({ restaurant, model }) => {
           {model?.name ? (
             <div>
               <span className="text-label">
-                <h6>Cuisine: </h6>
+                <h6>Name: </h6>
               </span>
               {restaurant.name}
             </div>

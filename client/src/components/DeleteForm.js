@@ -8,6 +8,20 @@ const DeleteForm = () => {
   const { register, handleSubmit } = useForm();
   const [notFound, setNotFound] = useState(false);
   const [restaurant, setRestaurant] = useState(undefined);
+  const [model, setModel] = useState({});
+
+  const _model = {
+    name: true,
+    cuisine: true,
+    building: true,
+    latitude: true,
+    longitude: true,
+    street: true,
+    zipcode: true,
+    grades: true,
+    borough: true,
+    restaurant_id: true,
+  };
 
   const search = async (values) => {
     setRestaurant(undefined);
@@ -19,6 +33,7 @@ const DeleteForm = () => {
             setNotFound(true);
           } else {
             setRestaurant(response.data[0]);
+            setModel(_model);
           }
         } else {
           setNotFound(true);
@@ -57,11 +72,13 @@ const DeleteForm = () => {
                 innerRef={register}
               />
             </FormGroup>
-            <Button type="submit">Search</Button>
+            <Button className="mb-2" type="submit">
+              Search
+            </Button>
           </Form>
           {restaurant ? (
             <>
-              <Restaurant restaurant={restaurant} />
+              <Restaurant restaurant={restaurant} model={model} />
               <Button
                 className="mt-2"
                 type="button"

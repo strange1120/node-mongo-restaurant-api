@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, FormGroup, Form, Label, Input, Button, Col } from "reactstrap";
 import { useForm } from "react-hook-form";
 import RestaurantDataService from "../services/RestaurantService";
@@ -9,7 +9,13 @@ const AddForm = () => {
   const [searchSubmitted, setSearchSubmitted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
+
+  useEffect(() => {
+    if (submitted === true) {
+      setValue("restaurant_id", "");
+    }
+  }, [submitted]);
 
   const onSubmit = async (values) => {
     await RestaurantDataService.get(values.restaurant_id)

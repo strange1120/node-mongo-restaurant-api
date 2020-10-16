@@ -17,7 +17,7 @@ const SearchForm = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [model, setModel] = useState({});
 
-  const { register, handleSubmit, getValues } = useForm();
+  const { register, handleSubmit, getValues, reset } = useForm();
 
   const _model = {
     name: true,
@@ -58,6 +58,7 @@ const SearchForm = () => {
 
         setRestaurants(restaurants);
         setTotalCount(totalItems);
+        reset();
       })
       .catch((e) => {
         console.log(e);
