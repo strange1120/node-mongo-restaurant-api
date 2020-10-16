@@ -19,6 +19,7 @@ const update = (id, data) => {
 const search = (searchTerms, page, pageSize) => {
   let _searchTerms = Object.entries(searchTerms);
   _searchTerms = _searchTerms.map((term) => `${term[0]}=${term[1]}&&`);
+  _searchTerms = _searchTerms.join("");
   const response = http.get(
     `/restaurants?${_searchTerms}page=${page}&&pageSize=${pageSize}`
   );

@@ -9,8 +9,8 @@
     "node": ">=8.0.0"
   },
   "scripts": {
-    "start": "nodemon index.js",
-    "server": "nodemon index.js",
+    "start": "node index.js",
+    "server": "node index.js",
     "client": "yarn --cwd ./client run start",
     "dev": "concurrently -k \"yarn run server\" \"yarn run client\""
   },

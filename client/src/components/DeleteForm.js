@@ -63,6 +63,7 @@ const DeleteForm = () => {
             <>
               <Restaurant restaurant={restaurant} />
               <Button
+                className="mt-2"
                 type="button"
                 onClick={() => deleteRestaurant(restaurant)}
               >

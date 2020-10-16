@@ -62,14 +62,7 @@ exports.findAll = (req, res) => {
 
   Restaurant.paginate(
     {
-      $and: [
-        ...conditions,
-        {
-          deleted: {
-            $ne: true,
-          },
-        },
-      ],
+      $and: conditions,
     },
     { offset, limit }
   )

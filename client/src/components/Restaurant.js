@@ -106,11 +106,11 @@ const Restaurant = ({ restaurant, model }) => {
       </Row>
       <Row>
         <Col md={12}>
-          <span className="text-label">
-            <h6>Grades: </h6>
-          </span>
           {model?.grades ? (
             <>
+              <span className="text-label">
+                <h6>Grades: </h6>
+              </span>
               {restaurant.grades.map((grade, index) => (
                 <Grade key={index} grade={grade} />
               ))}

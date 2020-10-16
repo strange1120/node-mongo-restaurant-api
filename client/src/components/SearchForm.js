@@ -9,7 +9,6 @@ import ResultOptions from "./ResultOptions";
 const SearchForm = () => {
   const [nameChecked, setNameChecked] = useState(false);
   const [boroughChecked, setBoroughChecked] = useState(false);
-  const [restaurantIdChecked, setRestaurantIdChecked] = useState(false);
   const [cuisineChecked, setCuisineChecked] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
   let [fieldCount, setFieldCount] = useState(0);
@@ -45,7 +44,17 @@ const SearchForm = () => {
   const search = (values) => {
     RestaurantDataService.search(values, page, 5)
       .then((response) => {
-        const { totalItems, restaurants } = response.data;
+        let { totalItems, restaurants } = response.data;
+
+        let deleted = [];
+
+        restaurants.forEach((restaurant) => {
+          if (restaurant.deleted && restaurant.deleted === true) {
+            deleted.push(restaurant);
+          }
+        });
+
+        restaurants = restaurants.filter((el) => !deleted.includes(el));
 
         setRestaurants(restaurants);
         setTotalCount(totalItems);
@@ -81,15 +90,6 @@ const SearchForm = () => {
     }
   };
 
-  const toggleRestaurantId = () => {
-    setRestaurantIdChecked(!restaurantIdChecked);
-    if (restaurantIdChecked === false) {
-      setFieldCount(fieldCount + 1);
-    } else {
-      setFieldCount(fieldCount - 1);
-    }
-  };
-
   const toggleCuisine = () => {
     setCuisineChecked(!cuisineChecked);
     if (cuisineChecked === false) {
@@ -119,12 +119,6 @@ const SearchForm = () => {
             </FormGroup>
             <FormGroup check inline>
               <Label check>
-                <Input type="checkbox" onClick={() => toggleRestaurantId()} />
-                Restaurant ID
-              </Label>
-            </FormGroup>
-            <FormGroup check inline>
-              <Label check>
                 <Input type="checkbox" onClick={() => toggleCuisine()} />
                 Cuisine
               </Label>
@@ -137,16 +131,6 @@ const SearchForm = () => {
                 <Input
                   name="cuisine"
                   placeholder="Cuisine"
-                  innerRef={register}
-                />
-              </FormGroup>
-            ) : null}
-            {restaurantIdChecked ? (
-              <FormGroup>
-                <Label for="restaurant_id">Restaurant ID</Label>
-                <Input
-                  name="restaurant_id"
-                  placeholder="Restaurant ID"
                   innerRef={register}
                 />
               </FormGroup>
