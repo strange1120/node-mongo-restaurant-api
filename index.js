@@ -2,15 +2,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 
-// const cors = require("cors");
+const cors = require("cors");
 
 const app = express();
 
-// const corsOptions = {
-//   origin: "http://localhost:8081",
-// };
+const corsOptions = {
+  origin: "http://localhost:8081",
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 

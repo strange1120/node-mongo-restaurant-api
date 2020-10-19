@@ -1,4 +1,4 @@
-module.exports = (mongoose, mongoosePaginate) => {
+module.exports = (mongoose) => {
   const schema = mongoose.Schema({
     address: {
       building: String,
@@ -19,8 +19,6 @@ module.exports = (mongoose, mongoosePaginate) => {
     object.id = _id;
     return object;
   });
-
-  schema.plugin(mongoosePaginate);
 
   const Restaurant = mongoose.model("restaurant", schema);
   return Restaurant;

@@ -1,13 +1,6 @@
 const db = require("../models");
 const Restaurant = db.restaurants;
 
-const getPagination = (page, size) => {
-  const limit = size ? +size : 5;
-  const offset = page ? page * limit : 0;
-
-  return { limit, offset };
-};
-
 // Create and Save a new Restaurant
 exports.create = (req, res) => {
   // Validate request
@@ -42,7 +35,7 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all Restaurants from the database.
-exports.findAll = (req, res) => {
+exports.findAll = async (req, res) => {
   let conditions = [];
   const { page, pageSize } = req.query;
   delete req.query.pageSize;
@@ -58,28 +51,27 @@ exports.findAll = (req, res) => {
     conditions.push(condition);
   });
 
-  const { limit, offset } = getPagination(page, pageSize);
-
-  Restaurant.paginate(
-    {
+  try {
+    const restaurants = await Restaurant.find({
       $and: conditions,
-    },
-    { offset, limit }
-  )
-    .then((data) => {
-      res.send({
-        totalItems: data.totalDocs,
-        restaurants: data.docs,
-        totalPages: data.totalPages,
-        currentPage: data.page - 1,
-      });
     })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving restaurants.",
-      });
+      .limit(pageSize * 1)
+      .skip((page - 1) * pageSize)
+      .exec();
+
+    const count = await Restaurant.count({ $and: conditions });
+
+    res.json({
+      restaurants,
+      totalCount: count,
+      currentPage: page,
     });
+  } catch (err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving restaurants.",
+    });
+  }
 };
 
 // Find a single Restaurant with an id

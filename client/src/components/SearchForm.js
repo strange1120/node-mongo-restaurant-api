@@ -44,7 +44,7 @@ const SearchForm = () => {
   const search = (values) => {
     RestaurantDataService.search(values, page, 5)
       .then((response) => {
-        let { totalItems, restaurants } = response.data;
+        let { totalCount, restaurants } = response.data;
 
         let deleted = [];
 
@@ -57,8 +57,7 @@ const SearchForm = () => {
         restaurants = restaurants.filter((el) => !deleted.includes(el));
 
         setRestaurants(restaurants);
-        setTotalCount(totalItems);
-        reset();
+        setTotalCount(totalCount);
       })
       .catch((e) => {
         console.log(e);
@@ -66,7 +65,7 @@ const SearchForm = () => {
   };
 
   useEffect(() => {
-    if (page > 1) search(getValues());
+    search(getValues());
   }, [page]);
 
   const handlePageChange = (value) => {
